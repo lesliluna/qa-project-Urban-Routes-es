@@ -11,15 +11,17 @@ class UrbanRoutesPage:
 
     request_taxi_button = (By.CSS_SELECTOR, '.button.round')
 
-    comfort_tariff_icon = (By.XPATH, '//div[@class="tcard-title" and text()="comfort"]')
+    comfort_tariff_icon = (By.XPATH, '//div[@class="tcard-title" and text()="Comfort"]')
     comfort_tariff_assert =(By.XPATH, '//div[@class="r-sw-label" and text()="Manta y pañuelos"]')
 
     phone_number_button = (By.CSS_SELECTOR, 'number-picker')
-    next_phone_button = (By.CSS_SELECTOR, 'number-picker open')
+    next_phone_button = (By.XPATH, "//button[@type='submit'][@class='button full']")
+    phone_option = (By.XPATH, '//div[text()="Número de teléfono"]')
     phone_field = (By.ID, 'phone')
-    confirm_phone_button = (By.XPATH, '//button[text()="Siguiente"]')
+    phone_code = (By.ID, 'code')
+    confirm_phone_button = (By.XPATH, '//button[text()="Confirmar"]')
 
-    add_card_button = (By.XPATH, '//button[text()="Método de pago"]')
+    add_card_button = (By.XPATH, '//div[text()="Método de pago" and @class= "pp-text"]')
     card_number_field = (By.ID, 'number')
     card_code_field = (By.ID, 'code')
     link_card_button = (By.XPATH, '//button[text()="Agregar"]')
@@ -81,17 +83,18 @@ class UrbanRoutesPage:
         return self.get_comfort_tariff_assert().text
 
     #TELEFONO
-    def set_phone_number(self, phone):
-        self.wait.until(
-            EC.visibility_of_element_located(self.phone_number_field)
-        ).send_keys(phone)
+    def click_phone_number(self):
+        self.wait.until(EC.visibility_of_element_located(self.phone_option)) .click()
+    def set_phone_number(self, phone_number):
+        WebDriverWait (self.driver, 5).until(EC.visibility_of_element_located(self.phone_field))
+        self.driver.find_element(*self.phone_field).send_keys(phone_number)
 
     def click_next_phone(self):
         self.driver.find_element(*self.next_phone_button).click()
 
     def set_phone_code(self, code):
         self.wait.until(
-            EC.visibility_of_element_located(self.code_field)
+            EC.visibility_of_element_located(self.phone_code)
         ).send_keys(code)
 
     def confirm_phone(self):
@@ -109,7 +112,8 @@ class UrbanRoutesPage:
         ).send_keys(card_number)
 
     def set_card_code(self, card_code):
-        code_input = self.driver.find_element(*self.card_code_field)
+        code_input = self.wait.until(
+            EC.visibility_of_element_located(self.card_code_field))
         code_input.send_keys(card_code)
         code_input.send_keys(Keys.TAB)
 

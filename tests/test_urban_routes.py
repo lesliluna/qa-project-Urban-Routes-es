@@ -4,6 +4,8 @@ from selenium.webdriver import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from pages.urban_routes_page import UrbanRoutesPage
+from helpers.utilities import retrieve_phone_code
+
 
 class TestUrbanRoutes:
 
@@ -30,6 +32,7 @@ class TestUrbanRoutes:
         assert self.routes_page.read_comfort_tariff_assert() == "Manta y pañuelos"
 
     def test_add_phone_number(self):
+        self.routes_page.click_phone_number()
         self.routes_page.set_phone_number(data.phone_number)
         self.routes_page.click_next_phone()
 
@@ -40,7 +43,6 @@ class TestUrbanRoutes:
 
     def test_add_card(self):
         self.routes_page.click_add_card()
-
         self.routes_page.set_card_number(data.card_number)
         self.routes_page.set_card_code(data.card_code)
 
